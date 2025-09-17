@@ -1,52 +1,65 @@
-<?php 
+<?php
+// Include database connection
+include("config.php");
+
+// Start a session
 session_start();
-include ("config.php");
+
+// If user submits the login form
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Prepare and execute query to fetch user by email
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Verify password and set session
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role_id'] = $user['role_id'];
+        header("Location: index.php");
+        exit();
+    } else {
+        $error = "Invalid email or password.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - EMS</title>
+    <title>Login - Employee Management System</title>
+    <link rel="stylesheet" href="includes/style.css">
 </head>
-<body>
+<body class="auth-body"> <!-- Important: apply the auth-body class -->
 
-<h2>Login</h2>
-<form method="post" action="login.php">
-    <label for="email">Email:</label>
-    <input type="email" name="email" required>
-    <br>
+    <div class="auth-container">
+        <h2>Employee Management System</h2>
+        <p class="auth-subtitle">Login to your account</p>
 
-    <label for="password">Password:</label>
-    <input type="password" name="password" required>
-    <br>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo "<p class='error'>" . $_SESSION['error'] . "</p>";
+            unset($_SESSION['error']);
+        }
+        if (isset($_SESSION['success'])) {
+        echo "<p style='color: green;'>" . $_SESSION['success'] . "</p>";
+        unset($_SESSION['success']);
+        }
+        ?>
 
-    <button type="submit" name="login">Login</button>
-</form>
+        <form action="login_process.php" method="POST">
+            <input type="email" name="email" placeholder="Email" class="auth-input" required>
+            <input type="password" name="password" placeholder="Password" class="auth-input" required>
+            <button type="submit" class="auth-btn">Login</button>
+        </form>
 
-<?php
-if (isset($_POST['login'])) {
-    $email= $_POST['email'];
-    $password = $_POST['password'];
-    
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        <p class="auth-link">Don’t have an account? <a href="register.php">Register</a></p>
+    </div>
 
-    if ($user && password_verify($password, $user['password'])) {
-        // password is correct
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role_id'] = $user['role_id'];
-        $_SESSION['email'] = $user['email'];
-
-        echo "<p style='color:green;'>Login successful! Redirecing...</p>";
-        header("refresh:2; url=index.php"); 
-    } else {
-        echo "<p style='color:red;'>Invalid email or password!</p>";
-    }
-}
-?>
 </body>
-</html> 
-
+</html>

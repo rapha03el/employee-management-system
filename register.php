@@ -1,50 +1,37 @@
-<?php include ('config.php'); ?>
+<?php
+session_start();
+include("config.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - EMS</title>
+    <title>Register - Employee Management System</title>
+    <link rel="stylesheet" href="includes/style.css">
 </head>
-<body>
-    <h2>Register New User</h2>
-    <form action="register.php" method="POST">
-        <label for="email">Email:</label>
-        <input type="email" name="email" required>
-        <br>
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
-        <br>
+<body class="auth-body">
 
-        <label>Role</label>
-        <select name="role_id">
-            <option value="1">Admin</option>
-            <option value="2">HR</option>
-            <option value="3">Manager</option>
-            <option value="4">Employee</option>
-        </select><br><br>
+    <div class="auth-container">
+        <h2>Create an Account</h2>
+        <p class="auth-subtitle">Join the Employee Management System</p>
 
-        <button type="submit" name="register">Register</button>
-    </form>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo "<p class='error'>" . $_SESSION['error'] . "</p>";
+            unset($_SESSION['error']);
+        }
+        ?>
 
-    <?php
-    if (isset($_POST['register'])) {
-        $email = $_POST['email'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $role_id = $_POST['role_id'];
+        <form action="register_process.php" method="POST">
+            <input type="email" name="email" placeholder="Email" class="auth-input" required>
+            <input type="password" name="password" placeholder="Password" class="auth-input" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" class="auth-input" required>
+            <button type="submit" class="auth-btn">Register</button>
+        </form>
 
-        try {
-        $stmt = $conn->prepare("INSERT INTO users (email, `password`, role_id) VALUES (:email, :password, :role_id)");
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $password);
-        $stmt->bindParam(':role_id', $role_id);
-        $stmt->execute();
+        <p class="auth-link">Already have an account? <a href="login.php">Login</a></p>
+    </div>
 
-        echo "<p style='color:green;'>User registered successfully!</p>";
-        } catch (PDOException $e) {
-        echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
-    }
-    }
-    ?>
 </body>
 </html>

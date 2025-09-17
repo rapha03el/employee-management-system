@@ -1,5 +1,8 @@
 <?php
 session_start();
+include("../../includes/auth.php");
+require_login();
+require_role(['admin','manager']); // only admin+manager can view employee list
 include("../../config.php");
 include("../../includes/header.php");
 
