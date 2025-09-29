@@ -5,9 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/**
- * Require user to be logged in. If not, redirect to login.
- */
+/*Require user to be logged in. If not, redirect to login. */
 function require_login() {
     if (!isset($_SESSION['user_id'])) {
         header("Location: /ems/login.php");

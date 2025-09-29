@@ -1,93 +1,85 @@
 <?php
 session_start();
-include("../../config.php");
-include("../../includes/header.php");
+require_once "../../config.php";
 
+// Restrict to admin
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../../login.php");
+    exit();
+}
+
+// Check for ID
 if (!isset($_GET['id'])) {
-    die("No employee ID provided.");
+    header("Location: list.php");
+    exit();
 }
 
 $id = $_GET['id'];
 
-// Fetch employee data
-$stmt = $conn->prepare("SELECT * FROM employees WHERE id = :id");
-$stmt->execute([':id' => $id]);
-$employee = $stmt->fetch(PDO::FETCH_ASSOC);
+// Fetch employee
+$stmt = $pdo->prepare("SELECT * FROM employees WHERE id = ?");
+$stmt->execute([$id]);
+$employee = $stmt->fetch();
 
 if (!$employee) {
-    die("Employee not found!");
+    die("Employee not found.");
 }
 
-// Update employee if form submitted
-if (isset($_POST['update'])) {
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_name = $_POST['first_name'];
     $last_name  = $_POST['last_name'];
     $email      = $_POST['email'];
     $phone      = $_POST['phone'];
     $position   = $_POST['position'];
-    $department = $_POST['department'];
-    $hire_date  = $_POST['hire_date'];
 
-    try {
-        $stmt = $conn->prepare("UPDATE employees SET 
-            first_name = :first_name,
-            last_name = :last_name,
-            email = :email,
-            phone = :phone,
-            position = :position,
-            department = :department,
-            hire_date = :hire_date
-            WHERE id = :id");
-
-        $stmt->execute([
-            ':first_name' => $first_name,
-            ':last_name'  => $last_name,
-            ':email'      => $email,
-            ':phone'      => $phone,
-            ':position'   => $position,
-            ':department' => $department,
-            ':hire_date'  => $hire_date,
-            ':id'         => $id
-        ]);
-
-        echo "<p style='color:green;'>Employee updated successfully!</p>";
-        header("refresh:2; url=list.php");
-    } catch (PDOException $e) {
-        echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
+    $update = $pdo->prepare("UPDATE employees 
+                             SET first_name=?, last_name=?, email=?, phone=?, position=? 
+                             WHERE id=?");
+    if ($update->execute([$first_name, $last_name, $email, $phone, $position, $id])) {
+        header("Location: list.php?updated=1");
+        exit();
+    } else {
+        $error = "Error updating employee.";
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee</title>
+    <link rel="stylesheet" href="/EMS/includes/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Employee</h1>
 
+        <?php if (!empty($error)): ?>
+            <p class="error"><?php echo htmlspecialchars($error); ?></p>
+        <?php endif; ?>
 
-<h1>Edit Employee</h1>
+        <form method="POST" action="">
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" value="<?php echo htmlspecialchars($employee['first_name']); ?>" required>
 
-<form method="POST">
-    <label>First Name</label>
-    <input type="text" name="first_name" value="<?= $employee['first_name'] ?>" required>
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="last_name" value="<?php echo htmlspecialchars($employee['last_name']); ?>" required>
 
-    <label>Last Name</label>
-    <input type="text" name="last_name" value="<?= $employee['last_name'] ?>" required>
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="<?php echo htmlspecialchars($employee['email']); ?>" required>
 
-    <label>Email</label>
-    <input type="email" name="email" value="<?= $employee['email'] ?>" required>
+            <label for="phone">Phone:</label>
+            <input type="text" name="phone" value="<?php echo htmlspecialchars($employee['phone']); ?>">
 
-    <label>Phone</label>
-    <input type="text" name="phone" value="<?= $employee['phone'] ?>">
+            <label for="position">Position:</label>
+            <input type="text" name="position" value="<?php echo htmlspecialchars($employee['position']); ?>">
 
-    <label>Position</label>
-    <input type="text" name="position" value="<?= $employee['position'] ?>">
+            <button type="submit">Update Employee</button>
+        </form>
 
-    <label>Department</label>
-    <input type="text" name="department" value="<?= $employee['department'] ?>">
-
-    <label>Hire Date</label>
-    <input type="date" name="hire_date" value="<?= $employee['hire_date'] ?>">
-
-    <button type="submit" class="btn btn-edit">Update</button>
-    <a href="list.php" class="btn btn-danger">Cancel</a>
-</form>
-
-    <a href="list.php">Back to Employees</a>
-     <?php include("../../includes/footer.php"); ?>
+        <p><a href="list.php">⬅ Back to Employee List</a></p>
+    </div>
 </body>
 </html>

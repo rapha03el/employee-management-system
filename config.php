@@ -1,12 +1,12 @@
 <?php
 $host = "localhost";
 $dbname = "ems_db";
-$username = "root";
-$password = "";
+$username = "root";   // or your DB username
+$password = "";       // or your DB password (default in XAMPP is "")
 
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die ("Connection failed: " . $e->getMessage());
+    die("Database connection failed: " . $e->getMessage());
 }

@@ -35,7 +35,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     <title>Login - Employee Management System</title>
     <link rel="stylesheet" href="includes/style.css">
 </head>
-<body class="auth-body"> <!-- Important: apply the auth-body class -->
+<body class="auth-body">
 
     <div class="auth-container">
         <h2>Employee Management System</h2>

@@ -11,12 +11,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password'])) {
-        // Save useful session data
+    
+        // save useful session data
 $_SESSION['user_id'] = $user['id'];
 $_SESSION['email'] = $user['email'];
 $_SESSION['role'] = $user['role'];
 
-// Redirect based on role
+// redirect based on role
 if ($user['role'] === 'admin') {
     header("Location: admin_dashboard.php");
 } elseif ($user['role'] === 'manager') {
