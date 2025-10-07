@@ -44,6 +44,18 @@ $employees = $stmt->fetchAll();
 
 </head>
 <body>
+    <!-- 🌐 Top Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">EMS Admin</div>
+        <nav>
+            <a href="../../admin_dashboard.php">Home</a>
+            <a href="../../admin_dashboard.php">Admin Dashboard</a>
+            <a href="list.php">Manage Users</a>
+            <a href="#">System Settings</a>
+            <a href="../../logout.php" class="logout">Logout</a>
+        </nav>
+    </header>
+
     <div class="container">
         <?php if (isset($_GET['success'])): ?>
     <div class="alert success"> Employee added successfully.</div>

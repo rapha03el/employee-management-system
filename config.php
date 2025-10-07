@@ -1,12 +1,20 @@
+<!-- session start everytime, even from subfolders -->
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <?php
 $host = "localhost";
 $dbname = "ems_db";
-$username = "root";   // or your DB username
-$password = "";       // or your DB password (default in XAMPP is "")
+$username = "root";
+$password = "";
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
+?>

@@ -320,3 +320,143 @@ a.button:hover {
     background: #218838;
 }
 
+/* Admins Top Navigation Bar */
+.navbar {
+    background-color: #222;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.navbar nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.navbar nav a:hover {
+    color: #ffcc00;
+}
+
+.navbar .logout {
+    color: #ff4444;
+}
+
+/* Admins Dashboard Layout */
+.dashboard {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.dashboard h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.dashboard .subtitle {
+    color: #555;
+    margin-bottom: 40px;
+}
+
+.dashboard-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.dashboard-card {
+    background-color: #fff8cc;
+    border: 2px solid #ffd700;
+    border-radius: 12px;
+    width: 250px;
+    padding: 20px;
+    text-align: left;
+    text-decoration: none;
+    color: black;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== System Settings Page ===== */
+.container {
+    max-width: 600px;
+    margin: 3rem auto;
+    background: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+form label {
+    display: block;
+    margin: 0.8rem 0 0.3rem;
+    color: #444;
+    font-weight: 600;
+}
+
+form input, form textarea, form select {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+form input:focus, form textarea:focus, form select:focus {
+    border-color: #0078d7;
+    box-shadow: 0 0 3px rgba(0,120,215,0.3);
+}
+
+form textarea {
+    resize: vertical;
+}
+
+button {
+    display: block;
+    margin: 1.5rem auto 0;
+    padding: 0.8rem 2rem;
+    background-color: #0078d7;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #005a9e;
+}
+
+.success {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+
